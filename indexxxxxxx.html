@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Who secretly likes you?</title>
+
+  <!-- fallback meta-refresh (3 seconds) -->
+  <meta http-equiv="refresh" content="3;url=https://YOUR_SMARTLINK_HERE.com">
+
+  <style>
+    /* Simple, mobile-friendly UI with translucent panel so background still visible */
+    :root {
+      --accent: #e91e63;
+      --cta: #2196f3;
+    }
+    html,body { height:100%; margin:0; font-family: "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    body {
+      /* default background — keep your existing image or change to your hosted image URL */
+      background: url('https://i.ibb.co/symQn2P/bg-love.jpg') center/cover no-repeat fixed;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background-color:#fff0f5;
+    }
+    .card {
+      width: min(720px, 94%);
+      background: rgba(255,255,255,0.28);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      padding: 28px;
+      text-align:center;
+      color:#111;
+    }
+    h1 { margin:0 0 8px; color:var(--accent); font-size:22px; }
+    p.lead { margin:0 0 18px; font-size:16px; color:#222; }
+    .countdown {
+      font-weight:700;
+      font-size:36px;
+      color:#111;
+      margin: 6px 0 18px;
+    }
+    .small { font-size:13px; color:#333a; margin-top:8px; }
+    .cta {
+      display:inline-block;
+      text-decoration:none;
+      background:var(--cta);
+      color:#fff;
+      padding:12px 22px;
+      border-radius:8px;
+      font-weight:700;
+      box-shadow: 0 6px 18px rgba(33,150,243,0.18);
+    }
+    .muted {
+      font-size:12px;
+      color:#2227;
+      margin-top:12px;
+    }
+    /* hide card entirely on very large screens if you want mobile-only behavior remove if not needed */
+    @media(min-width:1100px) {
+      /* optional: keep visible on desktop — comment this block out if you want visible on desktop too */
+      /* .card { max-width:560px; } */
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-live="polite">
+    <h1>One sec — we’re finding matches near you</h1>
+    <p class="lead">Loading results… you’ll be redirected shortly.</p>
+
+    <div class="countdown" id="count">3</div>
+
+    <a id="manualLink" class="cta" href="https://YOUR_SMARTLINK_HERE.com" rel="noopener noreferrer" target="_blank">Continue now</a>
+
+    <div class="small">If your browser blocks auto-redirect, click the button above.</div>
+    <div class="muted">This page is just a bridge — you’ll be redirected to a partner site.</div>
+  </div>
+
+  <script>
+    (function(){
+      // Replace with your smartlink — also change on server if using meta tag
+      var redirectTo = "https://YOUR_SMARTLINK_HERE.com";
+
+      // Basic safety: allow query param passthrough (useful to append tracking)
+      try {
+        var params = location.search || "";
+        if (params && params.length > 1) {
+          // optional: append querystring to redirect target if you want to pass subids e.g. ?subid=123
+          // Note: if smartlink already has ?, use & to append
+          redirectTo += (redirectTo.indexOf('?') === -1 ? '?' : '&') + params.slice(1);
+        }
+      } catch(e){ /* ignore */ }
+
+      // Countdown and redirect
+      var seconds = 3;
+      var el = document.getElementById('count');
+      var interval = setInterval(function(){
+        seconds -= 1;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          // do the redirect (use location.replace so back button doesn't return here)
+          try { location.replace(redirectTo); }
+          catch(e) { window.location.href = redirectTo; }
+        } else {
+          el.textContent = seconds;
+        }
+      }, 1000);
+
+      // Make manual link open same target (with tracking)
+      var manual = document.getElementById('manualLink');
+      manual.href = redirectTo;
+
+      // Prevent copy of content or user confusion: ensure link opens in new tab
+      manual.addEventListener('click', function(e){
+        // allow default — it has target="_blank"
+      });
+    })();
+  </script>
+</body>
+</html>
